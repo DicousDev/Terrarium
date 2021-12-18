@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5203542603482883117}
   - component: {fileID: 5203542603482883122}
   - component: {fileID: 5203542603482883123}
+  - component: {fileID: 735039130948842319}
+  - component: {fileID: -8092345028524743400}
   m_Layer: 0
   m_Name: Plant 1
   m_TagString: Untagged
@@ -124,9 +126,50 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0.1
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &735039130948842319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5203542603482883120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a645014d3793cbc4e9dc1067b74a82b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    title: 
+    sprite: {fileID: 0}
+    state: 0
+    level: 0
+    oxygenPerSecond: 0
+    price: 0
+    upgradePrice: 0
+    prefab: {fileID: 0}
+    requireLevel: 0
+    levelRequired: 0
+  rb: {fileID: 5203542603482883123}
+  force: 50
+--- !u!114 &-8092345028524743400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5203542603482883120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fc069a580ce9842bd1aec93b0e71c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 5203542603482883123}
+  plantTransform: {fileID: 0}
+  moveSmooth: 0.363
+  timeDelay: 0.2

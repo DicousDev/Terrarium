@@ -15,6 +15,12 @@ public class PlantPreview : MonoBehaviour
     [SerializeField] private Button plantButton;
     [SerializeField] private TextMeshProUGUI plantText;
 
+    public void StartUpgrade()
+    {
+        plant.state = plantState.upgrade;
+        SetUpgradePrice(plant.upgradePrice);
+    }
+
     public void Initialize(PlantData plant)
     {
         this.plant = plant;
@@ -23,12 +29,47 @@ public class PlantPreview : MonoBehaviour
         SetOxygen(plant.oxygenPerSecond);
         SetSprite(plant.sprite);
         plantButton.onClick.AddListener(ButtonClick);
+
+        if(plant.state == plantState.plant)
+        {
+            plantText.text = plant.price > 0 ? "Plant " + plant.price : "Plant";
+        }
+        else if(plant.state == plantState.upgrade)
+        {
+            SetUpgradePrice(plant.upgradePrice);
+        }
     }
 
     void ButtonClick()
     {
+        if(plant.state == plantState.plant && GameManager.GetCoin() >= plant.price)
+        {
+            Plant();
+        }
+        else if(plant.state == plantState.upgrade)
+        {
+            Upgrade();
+        }
+    }
+
+    void Plant()
+    {
         CartManager.instance.CloseCart();
-        GameManager.SetPlant(plant.prefab);
+        GameManager.SetPlant(plant.prefab, plant, this);
+    }
+
+    void Upgrade()
+    {
+        if(GameManager.GetCoin() < plant.upgradePrice)
+            return;
+        
+        GameManager.RemoveCoin(plant.upgradePrice);
+        plant.level += 1;
+        plant.upgradePrice *= 2;
+        plant.oxygenPerSecond *= 2;
+        SetLevel(plant.level);
+        SetUpgradePrice(plant.upgradePrice);
+        SetOxygen(plant.oxygenPerSecond);
     }
 
     void SetTitle(string title)
@@ -44,6 +85,11 @@ public class PlantPreview : MonoBehaviour
     void SetOxygen(int oxygen)
     {
         oxygenText.text = oxygen.ToString() + " oxygen / s";
+    }
+
+    void SetUpgradePrice(int price)
+    {
+        plantText.text = "upgrade " + price.ToString();
     }
 
     void SetSprite(Sprite sprite)
