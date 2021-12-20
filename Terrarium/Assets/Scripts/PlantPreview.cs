@@ -1,80 +1,99 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
 
 public class PlantPreview : MonoBehaviour
 {
-    [SerializeField] private PlantData plant;
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI oxygenText;
     [SerializeField] private Image image;
     [SerializeField] private Button plantButton;
     [SerializeField] private TextMeshProUGUI plantText;
-
-    public void StartUpgrade()
-    {
-        plant.state = plantState.upgrade;
-        SetUpgradePrice(plant.upgradePrice);
-    }
+    [SerializeField] private PlantData plant;
+    public static Action onAddPlant;
 
     public void Initialize(PlantData plant)
     {
         this.plant = plant;
-        SetTitle(plant.title);
-        SetLevel(plant.level);
-        SetOxygen(plant.oxygenPerSecond);
-        SetSprite(plant.sprite);
-        plantButton.onClick.AddListener(ButtonClick);
+        SubscriberEvents();
+        AdjustVariables();
+        plantState state = plant.GetPlantState();
 
-        if(plant.state == plantState.plant)
+        if(state == plantState.plant)
         {
-            plantText.text = plant.price > 0 ? "Plant " + plant.price : "Plant";
+            int price = plant.GetPrice();
+            plantText.text = price > 0 ? "Plant " + price : "Plant";
         }
-        else if(plant.state == plantState.upgrade)
+        else if(state == plantState.upgrade)
         {
-            SetUpgradePrice(plant.upgradePrice);
+            int upgradePrice = plant.GetUpgradePrice();
+            SetUpgradePrice(upgradePrice);
         }
+    }
+
+    void OnEnable() => SubscriberEvents();
+
+    void OnDisable() => UnsubscriberEvents();
+
+    void SubscriberEvents()
+    {
+        if(plant == null) return;
+        
+        plant.onChangedLevel += SetLevel;
+        plant.onChangedOxygen += SetOxygen;
+        plant.onChangedUpgradePrice += SetUpgradePrice;
+    }
+
+    void UnsubscriberEvents()
+    {
+        if(plant == null) return;
+
+        plant.onChangedLevel -= SetLevel;
+        plant.onChangedOxygen -= SetOxygen;
+        plant.onChangedUpgradePrice -= SetUpgradePrice;
+    }
+
+    void AdjustVariables()
+    {
+        titleText.text = plant.GetTitle();
+        SetLevel(plant.GetLevel());
+        SetOxygen(plant.GetOxygenPerSecond());
+        image.sprite = plant.GetSprite();
+        plantButton.onClick.AddListener(ButtonClick);
     }
 
     void ButtonClick()
     {
-        if(plant.state == plantState.plant && GameManager.GetCoin() >= plant.price)
+        int coin = ScoreManager.GetCoin();
+        plantState state = plant.GetPlantState();
+
+        if(state == plantState.plant && coin >= plant.GetPrice())
         {
-            Plant();
+            AddPlant();
         }
-        else if(plant.state == plantState.upgrade)
+        else if(state == plantState.upgrade)
         {
             Upgrade();
         }
     }
 
-    void Plant()
+    void AddPlant()
     {
-        CartManager.instance.CloseCart();
-        GameManager.SetPlant(plant.prefab, plant, this);
+        onAddPlant?.Invoke();
+        GameManager.SetPlant(plant);
     }
 
     void Upgrade()
     {
-        if(GameManager.GetCoin() < plant.upgradePrice)
+        int coin = ScoreManager.GetCoin();
+        int price = plant.GetUpgradePrice(); 
+        if(coin < price)
             return;
         
-        GameManager.RemoveCoin(plant.upgradePrice);
-        plant.level += 1;
-        plant.upgradePrice *= 2;
-        plant.oxygenPerSecond *= 2;
-        SetLevel(plant.level);
-        SetUpgradePrice(plant.upgradePrice);
-        SetOxygen(plant.oxygenPerSecond);
-    }
-
-    void SetTitle(string title)
-    {
-        titleText.text = title;
+        ScoreManager.RemoveCoin(price);
+        plant.Upgrade();
     }
 
     void SetLevel(int level)
@@ -90,10 +109,5 @@ public class PlantPreview : MonoBehaviour
     void SetUpgradePrice(int price)
     {
         plantText.text = "upgrade " + price.ToString();
-    }
-
-    void SetSprite(Sprite sprite)
-    {
-        image.sprite = sprite;
     }
 }

@@ -6,7 +6,6 @@ using TMPro;
 
 public class CartManager : MonoBehaviour
 {
-    public static CartManager instance;
     [SerializeField] private TextMeshProUGUI cartText;
     [SerializeField] private Button cartButton;
     [SerializeField] private GameObject cartView;
@@ -15,22 +14,18 @@ public class CartManager : MonoBehaviour
     [SerializeField] private Transform containerPreview;
     [SerializeField] private List<PlantData> plantsList = new List<PlantData>();
 
-    void Awake()
+    void OnEnable() 
     {
-        if(instance == null) 
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-
-        cartButton.onClick.AddListener(OpenCloseCart);
-        OpenCloseCart(cartOpen);
+        GameStart.onGameStart += () => cartButton.onClick.AddListener(OpenCloseCart);
+        GameStart.onGameStart += () => OpenCloseCart(cartOpen);
+        GameStart.onGameStart += LoadCart;
+        PlantPreview.onAddPlant += CloseCart;
     }
 
-    void Start() => LoadCart();
+    void OnDisable() 
+    {
+        PlantPreview.onAddPlant -= CloseCart;
+    }
 
     void LoadCart()
     {
@@ -43,12 +38,12 @@ public class CartManager : MonoBehaviour
         }
     }
 
-    public void OpenCloseCart()
+    void OpenCloseCart()
     {
         OpenCloseCart(!cartOpen);
     }
 
-    public void CloseCart()
+    void CloseCart()
     {
         OpenCloseCart(false);
     }

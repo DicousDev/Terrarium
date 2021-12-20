@@ -15,35 +15,42 @@ public class UIManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
-        }   
-        else
-        {
-            Destroy(this.gameObject);
+            return;
         }
-
-        UpdateCoinText(0);
+           
+        Destroy(this.gameObject);
     }
 
-    void Start() 
+    void OnEnable() 
     {
-        SetPanelSelections(false);
+        GameStart.onGameStart += () => UpdateCoinText(0);
+        GameStart.onGameStart += () => SetPanelSelections(false); 
+        ScoreManager.onChangedCoin += UpdateCoinText;
+        LevelManager.onChangedLevel += UpdateLevelText;
+        LevelManager.onChangedExperience += UpdateExperienceText;
     }
 
-    public void UpdateLevelText(int level)
+    void OnDisable() 
     {
-        levelText.text = "Level: " + level.ToString();
-    }
-
-    public void UpdateExperienceText(float percent)
-    {
-        experience.fillAmount = percent;
+        ScoreManager.onChangedCoin -= UpdateCoinText;
     }
 
     public void SetPanelSelections(bool value)
     {
         panelSelections.SetActive(value);
     }
-    public void UpdateCoinText(int coin)
+
+    void UpdateLevelText(int level)
+    {
+        levelText.text = "Level: " + level.ToString();
+    }
+
+    void UpdateExperienceText(float percent)
+    {
+        experience.fillAmount = percent;
+    }
+    
+    void UpdateCoinText(int coin)
     {
         coinText.text = "Coin: " + coin.ToString();
     }

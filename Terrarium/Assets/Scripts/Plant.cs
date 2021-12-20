@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class Plant : MonoBehaviour
@@ -8,20 +7,27 @@ public class Plant : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [Min(0)]
     [SerializeField] private float force = 50;
-
-    void Start() 
-    {
-        InvokeRepeating("AddCoin", 1, 1);
-    }
-
-    void AddCoin()
-    {
-        GameManager.AddCoin(data.oxygenPerSecond);
-    }
+    [SerializeField] private AddCoinEffect coinEffect;
+    public static Action<int> onClick;
 
     public void SetPlantData(PlantData data)
     {
         this.data = data;
+    }
+
+    void Awake() 
+    {
+        coinEffect = GameObject.Find("AddCoinEffect").GetComponent<AddCoinEffect>();  
+    }
+
+    void Start() 
+    {
+        InvokeRepeating(nameof(AddCoin), 1, 1);
+    }
+
+    void AddCoin()
+    {
+        ScoreManager.AddCoin(data.GetOxygenPerSecond());
     }
 
     void OnMouseDown() 
@@ -29,6 +35,8 @@ public class Plant : MonoBehaviour
         if(data == null) return;
         
         rb.AddForce(Vector2.up * force);
-        GameManager.AddCoin(data.oxygenPerSecond);
+        int oxygenPerSecond = data.GetOxygenPerSecond(); 
+        coinEffect.AddEffect("+" + oxygenPerSecond.ToString());
+        onClick?.Invoke(oxygenPerSecond);
     }
 }
