@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d8cb7e65c7ee442823c8f9fd2eb215, type: 3}
+  m_Name: Plant
+  m_EditorClassIdentifier: 
+  title: Plant
+  sprite: {fileID: 21300000, guid: 6c48b2a580ff55848bd5a3c0dca1b26f, type: 3}
+  state: 0
+  prefab: {fileID: 1865060066166294610, guid: fbec5a93a66452749a430feb1ecca313, type: 3}
+  level: 1
+  oxygenPerSecond: 100
+  price: 1000
+  upgradePrice: 100

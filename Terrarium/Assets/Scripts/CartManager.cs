@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -32,6 +31,7 @@ public class CartManager : MonoBehaviour
         for(int i = 0; i < plantsList.Count; i++)
         {
             PlantData data = plantsList[i];
+            data.Initialize();
             PlantPreview preview = Instantiate(previewPrefab);
             preview.transform.SetParent(containerPreview, false);
             preview.Initialize(data);

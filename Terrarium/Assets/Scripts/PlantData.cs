@@ -10,19 +10,22 @@ public class PlantData
     public Action<int> onChangedOxygen;
     public Action<int> onChangedUpgradePrice;
     public Action onChangedStateToUpgrade;
-    [SerializeField] private string title;
-    [SerializeField] private Sprite sprite;
+    [SerializeField] private PlantSO plantSO;
     [SerializeField] private plantState state;
-    [Min(1)]
     [SerializeField] private int level;
-    [Min(1)]
     [SerializeField] private int oxygenPerSecond;
-    
-    [Min(0)]
     [SerializeField] private int price;
-    [Min(0)]
     [SerializeField] private int upgradePrice;
-    [SerializeField] private GameObject prefab;
+
+    public void Initialize()
+    {
+        state = plantSO.GetPlantState();
+        level = plantSO.GetLevel();
+        oxygenPerSecond = plantSO.GetOxygenPerSecond();
+        price = plantSO.GetPrice();
+        upgradePrice = plantSO.GetUpgradePrice();
+
+    }
 
     public void ChangeToUpgrade()
     {
@@ -42,12 +45,12 @@ public class PlantData
 
     public string GetTitle()
     {
-        return title;
+        return plantSO.GetTitle();
     }
 
     public Sprite GetSprite()
     {
-        return sprite;
+        return plantSO.GetSprite();
     }
 
     public plantState GetPlantState()
@@ -77,24 +80,24 @@ public class PlantData
 
     public GameObject GetPrefab()
     {
-        return prefab;
+        return plantSO.GetPrefab();
     }
 
     void NextLevel()
     {
         level += 1;
-        onChangedLevel?.Invoke(level);
+        onChangedLevel?.Invoke(GetLevel());
     }
 
     void UpgradeOxygenPerSecond()
     {
         oxygenPerSecond *= 2;
-        onChangedOxygen?.Invoke(oxygenPerSecond);
+        onChangedOxygen?.Invoke(GetOxygenPerSecond());
     }
 
     void UpdateUpgradePrice()
     {
         upgradePrice *= 2;
-        onChangedUpgradePrice?.Invoke(upgradePrice);
+        onChangedUpgradePrice?.Invoke(GetUpgradePrice());
     }
 }

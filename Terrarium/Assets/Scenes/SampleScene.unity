@@ -1938,24 +1938,8 @@ MonoBehaviour:
     type: 3}
   containerPreview: {fileID: 1206223895}
   plantsList:
-  - title: Snake Plant
-    sprite: {fileID: 21300000, guid: 95569e5e08ef11848aeded8d329fe5c9, type: 3}
-    state: 0
-    level: 1
-    oxygenPerSecond: 1
-    price: 0
-    upgradePrice: 1
-    prefab: {fileID: 5203542603482883120, guid: 7e7d5de3ee8a77a4e88d1a3e592ee659,
-      type: 3}
-  - title: Plant
-    sprite: {fileID: 21300000, guid: 6c48b2a580ff55848bd5a3c0dca1b26f, type: 3}
-    state: 0
-    level: 1
-    oxygenPerSecond: 1
-    price: 100
-    upgradePrice: 100
-    prefab: {fileID: 1865060066166294610, guid: fbec5a93a66452749a430feb1ecca313,
-      type: 3}
+  - plantSO: {fileID: 11400000, guid: 362c90f2c6e32544f8f32b2ba8dac1a3, type: 2}
+  - plantSO: {fileID: 11400000, guid: b29cb6e845cff3c4c8de306803a9f934, type: 2}
 --- !u!1001 &1106991846
 PrefabInstance:
   m_ObjectHideFlags: 0

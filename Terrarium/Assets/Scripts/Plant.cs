@@ -34,6 +34,7 @@ public class Plant : MonoBehaviour
     {
         if(data == null) return;
         
+        AddCoin();
         rb.AddForce(Vector2.up * force);
         int oxygenPerSecond = data.GetOxygenPerSecond(); 
         coinEffect.AddEffect("+" + oxygenPerSecond.ToString());
